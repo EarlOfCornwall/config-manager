@@ -71,15 +71,20 @@ def show_finded_confs(finded_confs):
 
         print()
 
-def copying_confs(find_confs, config_dir=False):
+def copying_confs(find_confs, config_dir=False, info_file=False):
     if not config_dir:
         raise FileNotFoundError('Dir ./Configs/ not found. Programm can create it. Reopen programm.')
 
     for conf_info in find_confs:
         for path in conf_info[1:]:
             try:
-                shutil.copy(path, f"Configs/{os.path.basename(path)}")
-                print(f'Скопирован конфиг {path} в Configs/{os.path.basename(path)}')
+                copy_path = f"Configs/{os.path.basename(path)}"
+                shutil.copy(path, copy_path)
+                print(f'Скопирован конфиг {path} в {copy_path}')
+                if info_file:
+                    with open('info.txt', 'a', encoding='UTF-8') as file:
+                        file.write(f'{conf_info[0]} {path} {copy_path}\n') # PROG_NAME SOURCE_CONF COPY_CONF
+                        
             except Exception as e:
                 print(f'Something went wrong {e}')
 
@@ -90,7 +95,8 @@ def main(config_dir_ex, info_file_ex):
     
     ans = input('Do you want to copy finded configs? (Y/n) ')
     if ans in ' Yy':
-        copying_confs(popular_confs, config_dir=config_dir_ex)
+        copying_confs(popular_confs, config_dir=config_dir_ex, info_file=info_file_ex)
+        
     
    
 if __name__ == "__main__":
