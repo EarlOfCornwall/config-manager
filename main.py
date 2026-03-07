@@ -1,9 +1,50 @@
 import os
-import pathlib
 from paths_info import POPULAR_CONFIGS
+
+def create_dir(path):
+    os.mkdir(path)
+    print(f'Succefully created {path}')
+
+def create_file(path):
+    with open(path, 'w', encoding='UTF-8'):
+        pass
+    print(f'Succefully created {path}')
 
 def clear(): 
     os.system('clear')
+
+def check_for_needed() -> list:
+    dir = config_dir_existence()
+    file = info_file_existence()
+    return [dir, file]
+
+def info_file_existence() -> bool:
+    if os.path.exists('./info.txt'):
+        return True
+
+    ans = input('Would you like to create ./info.txt file for info storage? (Y/n)')
+    if ans in " Yy":
+        try:
+            create_file('info.txt')
+            return True
+        except Exception as e:
+            print(f'Something went wrong: {e}')
+            return False
+    return False
+
+def config_dir_existence() -> bool:
+    if os.path.exists('./Configs'):
+        return True
+
+    ans = input('Would you like to create ./Configs/ dir for config storage? (Y/n)')
+    if ans in " Yy":
+        try:
+            create_dir("Configs")
+            return True
+        except Exception as e:
+            print(f'Something went wrong: {e}')
+            return False
+    return False    
 
 def search_for_popular_configs():
     find_confs = []
@@ -30,5 +71,9 @@ def main():
 
         print()
 
-main()
-        
+
+
+if __name__ == "__main__":
+    # main()
+    pass
+
