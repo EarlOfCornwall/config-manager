@@ -8,7 +8,7 @@ CONFIG_FOLDER = 'Configs'
 INFO_FILE = 'info.csv'
 
 def create_dir(path):
-    os.mkdir(path)
+    os.makedirs(path, exist_ok=True)
     print(f'Succefully created {path}')
 
 def create_file(path):
