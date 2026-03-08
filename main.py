@@ -96,6 +96,15 @@ def copying_confs(find_confs, config_dir=False, info_file=False):
             except Exception as e:
                 print(f'Something went wrong {e}')
 
+def read_info_file():
+    info_set = set()
+    with open(INFO_FILE, 'r', encoding='UTF-8') as info_file:
+        reader = csv.reader(info_file)    
+        for row in reader:
+            info_set.add(tuple(row))
+    
+    return info_set 
+
 def main(config_dir_ex, info_file_ex):
     
     popular_confs = search_for_popular_configs()
@@ -104,6 +113,9 @@ def main(config_dir_ex, info_file_ex):
     ans = input('Do you want to copy finded configs? (Y/n) ')
     if ans in ' Yy':
         copying_confs(popular_confs, config_dir=config_dir_ex, info_file=info_file_ex)
+    
+    for row in read_info_file():
+        print(row)
         
     
    
