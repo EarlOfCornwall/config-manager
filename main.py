@@ -1,6 +1,10 @@
 import os
 import shutil
 from paths_info import POPULAR_CONFIGS
+import csv
+
+CONFIG_FOLDER = 'Configs'
+INFO_FILE = 'info.csv'
 
 def create_dir(path):
     os.mkdir(path)
@@ -20,13 +24,13 @@ def check_for_needed() -> list:
     return [dir, file]
 
 def info_file_existence() -> bool:
-    if os.path.exists('./info.txt'):
+    if os.path.exists(INFO_FILE):
         return True
 
-    ans = input('Would you like to create ./info.txt file for info storage? (Y/n) ')
+    ans = input(f'Would you like to create ./{INFO_FILE} file for info storage? (Y/n) ')
     if ans in " Yy":
         try:
-            create_file('info.txt')
+            create_file(INFO_FILE)
             return True
         except Exception as e:
             print(f'Something went wrong: {e}')
@@ -34,13 +38,13 @@ def info_file_existence() -> bool:
     return False
 
 def config_dir_existence() -> bool:
-    if os.path.exists('./Configs'):
+    if os.path.exists(f'./{CONFIG_FOLDER}'):
         return True
 
-    ans = input('Would you like to create ./Configs/ dir for config storage? (Y/n) ')
+    ans = input(f'Would you like to create ./{CONFIG_FOLDER}/ dir for config storage? (Y/n) ')
     if ans in " Yy":
         try:
-            create_dir("Configs")
+            create_dir(CONFIG_FOLDER)
             return True
         except Exception as e:
             print(f'Something went wrong: {e}')
@@ -62,6 +66,12 @@ def search_for_popular_configs():
 
     return find_confs
 
+def log_into_file(prog_name='Unknown', source_path='Unknown', copy_path='Unknown'):
+    with open(INFO_FILE, 'a', encoding='UTF-8') as info_file:
+        writer = csv.writer(info_file)
+        writer.writerow([prog_name, source_path, copy_path]) # PROG_NAME SOURCE_CONF COPY_CONF
+
+
 def show_finded_confs(finded_confs):
     print('Найдено:')
     for conf_info in finded_confs:
@@ -73,7 +83,7 @@ def show_finded_confs(finded_confs):
 
 def copying_confs(find_confs, config_dir=False, info_file=False):
     if not config_dir:
-        raise FileNotFoundError('Dir ./Configs/ not found. Programm can create it. Reopen programm.')
+        raise FileNotFoundError(f'Dir ./{CONFIG_FOLDER}/ not found. Programm can create it. Reopen programm.')
 
     for conf_info in find_confs:
         for path in conf_info[1:]:
@@ -82,9 +92,7 @@ def copying_confs(find_confs, config_dir=False, info_file=False):
                 shutil.copy(path, copy_path)
                 print(f'Скопирован конфиг {path} в {copy_path}')
                 if info_file:
-                    with open('info.txt', 'a', encoding='UTF-8') as file:
-                        file.write(f'{conf_info[0]} {path} {copy_path}\n') # PROG_NAME SOURCE_CONF COPY_CONF
-                        
+                    log_into_file(conf_info[0], path, copy_path)   
             except Exception as e:
                 print(f'Something went wrong {e}')
 
