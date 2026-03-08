@@ -82,8 +82,8 @@ def search_for_popular_configs():
     return find_confs
 
 def log_into_file(prog_name='Unknown', source_path='Unknown', copy_path='Unknown'):
-    with open(INFO_FILE, 'a', encoding='UTF-8') as info_file:
-        writer = csv.writer(info_file)
+    with open(INFO_FILE, 'a', encoding='UTF-8', newline='') as info_file:
+        writer = csv.writer(info_file, quoting=csv.QUOTE_ALL)
         writer.writerow([prog_name, source_path, copy_path]) # PROG_NAME SOURCE_CONF COPY_CONF
 
 
@@ -115,8 +115,8 @@ def copying_confs(find_confs, config_dir=False, info_file=False):
 
 def read_info_file() -> set:
     info_set = set()
-    with open(INFO_FILE, 'r', encoding='UTF-8') as info_file:
-        reader = csv.reader(info_file)    
+    with open(INFO_FILE, 'r', encoding='UTF-8', newline='') as info_file:
+        reader = csv.reader(info_file, quoting=csv.QUOTE_ALL)    
         for row in reader:
             info_set.add(tuple(row))
     
