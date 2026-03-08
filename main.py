@@ -7,14 +7,16 @@ import time
 CONFIG_FOLDER = 'Configs'
 INFO_FILE = 'info.csv'
 
-def create_dir(path):
+def create_dir(path, need_to_print=True):
     os.makedirs(path, exist_ok=True)
-    print(f'Succefully created {path}')
+    if need_to_print: 
+        print(f'Succefully created {path}')
 
-def create_file(path):
+def create_file(path, need_to_print=True):
     with open(path, 'w', encoding='UTF-8'):
         pass
-    print(f'Succefully created {path}')
+    if need_to_print: 
+        print(f'Succefully created {path}')
 
 def clear(): 
     os.system('clear')
@@ -103,7 +105,9 @@ def copying_confs(find_confs, config_dir=False, info_file=False):
     for conf_info in find_confs:
         for path in conf_info[1:]:
             try:
-                copy_path = f"Configs/{os.path.basename(path)}"
+                dir_for_configs = f"{CONFIG_FOLDER}/{conf_info[0]}"
+                create_dir(dir_for_configs)
+                copy_path = f"{dir_for_configs}/{os.path.basename(path)}"
                 shutil.copy(path, copy_path)
                 print(f'Copied {path} into {copy_path}')
                 if info_file:
