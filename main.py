@@ -69,7 +69,7 @@ def config_dir_existence() -> bool:
 def search_for_popular_configs():
     find_confs = []
     for prog, info in POPULAR_CONFIGS.items():
-        prog_confs = [prog,] # 1 element - prog name
+        prog_confs = [prog,] # First element - prog name
         for file in info['files']:
             for path in info['paths']:
                 expanded_path = os.path.expanduser(path)
@@ -88,9 +88,9 @@ def log_into_file(prog_name='Unknown', source_path='Unknown', copy_path='Unknown
 
 
 def show_finded_confs(finded_confs):
-    print('Найдено:')
+    print('Founded:')
     for conf_info in finded_confs:
-        print(f'{len(conf_info) - 1} конфиг-файлов для {conf_info[0]}:')
+        print(f'{len(conf_info) - 1} config-files for {conf_info[0]}:')
         for confs in conf_info[1:]:
             print(confs)
 
@@ -105,7 +105,7 @@ def copying_confs(find_confs, config_dir=False, info_file=False):
             try:
                 copy_path = f"Configs/{os.path.basename(path)}"
                 shutil.copy(path, copy_path)
-                print(f'Скопирован конфиг {path} в {copy_path}')
+                print(f'Copied {path} into {copy_path}')
                 if info_file:
                     log_into_file(conf_info[0], path, copy_path)
                 else:
@@ -113,29 +113,54 @@ def copying_confs(find_confs, config_dir=False, info_file=False):
             except Exception as e:
                 print(f'Something went wrong {e}')
 
-def read_info_file():
+def read_info_file() -> set:
     info_set = set()
     with open(INFO_FILE, 'r', encoding='UTF-8') as info_file:
         reader = csv.reader(info_file)    
         for row in reader:
             info_set.add(tuple(row))
     
-    return info_set 
+    return info_set # No duplicates in paths
+
+def return_from_config_dir(config_dir=False, info_file=False):
+    if not config_dir or not info_file:
+        raise FileNotFoundError(f'There is no {CONFIG_FOLDER} or {INFO_FILE}. Cant return configs.')
+    
+    info = read_info_file() # (PROG, SOURCE, COPY)
+    for row in info:
+        print(f'For {row[0]}')
+        print(f'Move {row[2]} to {row[1]}')
+        try:
+            shutil.move(row[2], row[1])
+        except Exception as e:
+            print(f'Something went wrong for file {row[2]}: {e}')
+    
+    ans = input(f'Do you want to clear {INFO_FILE}? (N/y) ')
+    if ans and ans in 'yY':
+        with open(INFO_FILE, 'w') as f:
+            pass
+        print('Cleared.')
 
 def main(config_dir_ex, info_file_ex):
     
     popular_confs = search_for_popular_configs()
     show_finded_confs(popular_confs)
-    
+    print()
+    pause()
+
     ans = input('Do you want to copy finded configs? (Y/n) ')
+    clear()
     if ans in ' Yy':
         copying_confs(popular_confs, config_dir=config_dir_ex, info_file=info_file_ex)
-    
-    for row in read_info_file():
-        print(row)
+        pause(len(popular_confs))
+        clear()
+
+    ans = input('Do you want to return configs on their place? (N/y) ')
+    clear()
+    if ans and ans in 'yY':
+        return_from_config_dir(config_dir_ex, info_file_ex)
         
-    
-   
+        
 if __name__ == "__main__":
     d, f = check_for_needed()
     main(d, f)
