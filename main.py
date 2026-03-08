@@ -2,6 +2,7 @@ import os
 import shutil
 from paths_info import POPULAR_CONFIGS
 import csv
+import time
 
 CONFIG_FOLDER = 'Configs'
 INFO_FILE = 'info.csv'
@@ -18,6 +19,9 @@ def create_file(path):
 def clear(): 
     os.system('clear')
 
+def pause(pause=1.5):
+    time.sleep(pause)
+
 def check_for_needed() -> list:
     dir = config_dir_existence()
     file = info_file_existence()
@@ -31,10 +35,16 @@ def info_file_existence() -> bool:
     if ans in " Yy":
         try:
             create_file(INFO_FILE)
+            print()
+            pause()
+            clear()
             return True
         except Exception as e:
             print(f'Something went wrong: {e}')
+            pause()
+            clear()
             return False
+
     return False
 
 def config_dir_existence() -> bool:
@@ -45,9 +55,14 @@ def config_dir_existence() -> bool:
     if ans in " Yy":
         try:
             create_dir(CONFIG_FOLDER)
+            print()
+            pause()
+            clear()
             return True
         except Exception as e:
             print(f'Something went wrong: {e}')
+            pause()
+            clear()
             return False
     return False    
 
@@ -92,7 +107,9 @@ def copying_confs(find_confs, config_dir=False, info_file=False):
                 shutil.copy(path, copy_path)
                 print(f'Скопирован конфиг {path} в {copy_path}')
                 if info_file:
-                    log_into_file(conf_info[0], path, copy_path)   
+                    log_into_file(conf_info[0], path, copy_path)
+                else:
+                    print(f"{INFO_FILE} does not exists. Programm cant log info about copied configs.")
             except Exception as e:
                 print(f'Something went wrong {e}')
 
