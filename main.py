@@ -34,11 +34,13 @@ def check_for_needed() -> list:
     file = info_file_existence()
     return [dir, file]
 
+
 def count_files_in_folder(root_folder=CONFIG_FOLDER):
     total = 0
     for dirpath, dirnames, filenames in os.walk(root_folder):
-        total += len(filenames)    
+        total += len(filenames)
     return total
+
 
 def info_file_existence() -> bool:
     if os.path.exists(INFO_FILE):
@@ -135,7 +137,7 @@ def copying_confs(find_confs, config_dir=False, info_file=False):
             try:
                 copy_path = f"{prog_configs_folder}/{os.path.basename(source_path)}"
                 shutil.copy2(source_path, copy_path)
-                print(f"Copied {source_path} into {copy_path}")
+                print(f"Copied '{source_path}'  into  '{copy_path}'")
                 if info_file:
                     log_into_file(conf_info[0], source_path, copy_path)
                 else:
@@ -155,12 +157,14 @@ def read_info_file() -> set:
 
     return info_set  # No duplicates in paths
 
+
 def turn_source_configs_to_symlink(config_dir=False, info_file=False):
-    #if not config_dir or not info_file:
+    # if not config_dir or not info_file:
     #    raise FileNotFoundError(f"There is no {CONFIG_FOLDER} or {INFO_FILE}. Cant turn configs into symlinks")
 
-    #info = read_info_file()
+    # info = read_info_file()
     ...
+
 
 def return_from_config_dir(config_dir=False, info_file=False):
     if not config_dir or not info_file:
@@ -172,7 +176,7 @@ def return_from_config_dir(config_dir=False, info_file=False):
     for row in info:
         prog_name, source_path, copy_path = row
         print(f"For {prog_name}:")
-        print(f"Move {copy_path} to {source_path}")
+        print(f"Move '{copy_path}' to '{source_path}'")
         try:
             shutil.move(row[2], row[1])
         except Exception as e:
@@ -198,8 +202,8 @@ def main(config_dir_ex, info_file_ex):
         copying_confs(popular_confs, config_dir=config_dir_ex, info_file=info_file_ex)
         pause(len(popular_confs))
         clear()
-    
-    print(f'Now you have {count_files_in_folder()} configs in {CONFIG_FOLDER}/')
+
+    print(f"Now you have {count_files_in_folder()} configs in {CONFIG_FOLDER}/")
     ans = input("Do you want to return configs on their place? (N/y) ")
     clear()
     if ans and ans in "yY":
