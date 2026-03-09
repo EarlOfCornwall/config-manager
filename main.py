@@ -183,7 +183,7 @@ def turn_source_configs_to_symlink(config_dir=False, info_file=False):
             try:
                 if os.path.exists(source_path):
                     os.remove(source_path)
-                os.symlink(copy_path, source_path)
+                os.symlink(os.path.abspath(copy_path), source_path)
                 print(
                     f"Succefully create {source_path}(symlink) -> {copy_path}(config)"
                 )
