@@ -159,11 +159,30 @@ def read_info_file() -> set:
 
 
 def turn_source_configs_to_symlink(config_dir=False, info_file=False):
-    # if not config_dir or not info_file:
-    #    raise FileNotFoundError(f"There is no {CONFIG_FOLDER} or {INFO_FILE}. Cant turn configs into symlinks")
+    if not config_dir or not info_file:
+        raise FileNotFoundError(f"There is no {CONFIG_FOLDER} or {INFO_FILE}. Cant turn configs into symlinks")
 
-    # info = read_info_file()
-    ...
+    info = read_info_file()
+    if len(info) != count_files_in_folder():
+        raise ValueError("Mismatch between the number of records and saved configs. Something went wrong.")
+
+    for row in info:
+        prog_name, source_path, copy_path = row
+        
+        print(f"Do you agree with turning {source_path} to symlink with path on {copy_path}?")
+        ans = input(f"{source_path} will be deleted. If {copy_path} is corrupted you can loose your config. (N/y) ")
+        if ans and ans in 'Yy':
+            try:
+                if os.path.exists(source_path):
+                    os.remove(source_path)
+                os.symlink(copy_path, source_path)
+                print(f"Succefully create {source_path}(symlink) -> {copy_path}(config)")
+            except Exception as e:
+                print(f"Something went wrong: {e}")
+            
+        pause()
+        clear()
+                        
 
 
 def return_from_config_dir(config_dir=False, info_file=False):
@@ -178,7 +197,7 @@ def return_from_config_dir(config_dir=False, info_file=False):
         print(f"For {prog_name}:")
         print(f"Move '{copy_path}' to '{source_path}'")
         try:
-            shutil.move(row[2], row[1])
+            shutil.move(copy_path, source_path)
         except Exception as e:
             print(f"Something went wrong for file {row[2]}: {e}")
 
