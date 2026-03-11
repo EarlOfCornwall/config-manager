@@ -167,6 +167,7 @@ def turn_source_configs_to_symlink(config_dir=False, info_file=False, symlink_in
             return
 
     for row in info:
+        clear()
         prog_name, source_path, copy_path = row
 
         print(
@@ -205,7 +206,7 @@ def turn_source_configs_to_symlink(config_dir=False, info_file=False, symlink_in
                         print(f"Restore failed. You can do it manually. {backup_path} - path for backup")
                         pause(1)
 
-        pause()
+    pause()  
     clear()
     print('Done.')
     if symlink_info_file: print(f'Info about saved symlinks is in {SYMLINKS_FILE}')
@@ -219,6 +220,7 @@ def return_from_config_dir(config_dir=False, info_file=False):
 
     info = read_info_file(INFO_FILE)  # (PROG, SOURCE, COPY)
     for row in info:
+        clear()
         prog_name, source_path, copy_path = row
         if os.path.exists(source_path) or os.path.islink(source_path):
             ans = input(f"{source_path} exists. Overwrite? (N/y) ")
