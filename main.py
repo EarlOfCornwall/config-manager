@@ -31,8 +31,9 @@ def pause(pause=1.5):
 
 def check_for_needed() -> list:
     dir = config_dir_existence()
-    file = info_file_existence()
-    return [dir, file]
+    info_file = info_file_existence(INFO_FILE)
+    symlink_info_file = info_file_existence(SYMLINKS_FILE)
+    return [dir, info_file, symlink_info_file]
 
 
 def count_files_in_folder(root_folder=CONFIG_FOLDER):
@@ -42,14 +43,14 @@ def count_files_in_folder(root_folder=CONFIG_FOLDER):
     return total
 
 
-def info_file_existence() -> bool:
-    if os.path.exists(INFO_FILE):
+def info_file_existence(path) -> bool:
+    if os.path.exists(path):
         return True
 
-    ans = input(f"Would you like to create ./{INFO_FILE} file for info storage? (Y/n) ")
+    ans = input(f"Would you like to create ./{path} file for info storage? (Y/n) ")
     if ans in " Yy":
         try:
-            create_file(INFO_FILE)
+            create_file(path)
             print()
             pause()
             clear()
@@ -102,11 +103,11 @@ def search_for_popular_configs():
 
     return find_confs
 
-def log_into_symlink_file(prog_name='Unknown', config_path='Unknown', symlink_path='Unknown'):
+def log_into_symlink_file(prog_name='Unknown', config_path='Unknown', symlink_path='Unknown', backup_file='No backup'):
     with open(SYMLINKS_FILE, "a", encoding="UTF-8", newline="") as symlink_file:
         writer = csv.writer(symlink_file, quoting=csv.QUOTE_ALL)
         writer.writerow(
-            [prog_name, config_path, symlink_path]
+            [prog_name, config_path, symlink_path, backup_file]
         )
 
 def log_into_file(prog_name="Unknown", source_path="Unknown", copy_path="Unknown"):
@@ -168,7 +169,7 @@ def read_info_file() -> set:
     return info_set  # No duplicates in paths
 
 
-def turn_source_configs_to_symlink(config_dir=False, info_file=False):
+def turn_source_configs_to_symlink(config_dir=False, info_file=False, symlink_info_file=False):
     if not config_dir or not info_file:
         raise FileNotFoundError(
             f"There is no {CONFIG_FOLDER} or {INFO_FILE}. Cant turn configs into symlinks"
@@ -191,20 +192,29 @@ def turn_source_configs_to_symlink(config_dir=False, info_file=False):
         )
         if ans and ans in "Yy":
             try:
+                backup_path = 'No backup'
                 if os.path.exists(source_path):
                     backup_path = source_path + '.backup'
                     shutil.copy2(source_path, backup_path)
+                    print(f'Created backup file for {source_path} on {backup_path}')
                     os.remove(source_path)
                 os.symlink(os.path.abspath(copy_path), source_path)
+                
                 print(
                     f"Succefully create {source_path}(symlink) -> {copy_path}(config)"
                 )
+                if symlink_info_file:
+                    config_path = copy_path
+                    symlink_path = source_path
+                    log_into_symlink_file(prog_name, config_path, symlink_path, backup_path)
+
             except Exception as e:
                 print(f"Something went wrong: {e}")
 
-        pause()
+        pause(len())
         clear()
         print('Done.')
+        if symlink_info_file: print(f'Info about saved symlinks is in {SYMLINKS_FILE}')
 
 
 def return_from_config_dir(config_dir=False, info_file=False):
@@ -230,7 +240,7 @@ def return_from_config_dir(config_dir=False, info_file=False):
         print("Cleared.")
 
 
-def main(config_dir_ex, info_file_ex):
+def main(config_dir_ex, info_file_ex, symlink_info_file_ex):
 
     popular_confs = search_for_popular_configs()
     show_finded_confs(popular_confs)
@@ -259,5 +269,5 @@ def main(config_dir_ex, info_file_ex):
 
 
 if __name__ == "__main__":
-    d, f = check_for_needed()
-    main(d, f)
+    d, f, s = check_for_needed() # Dir for configs, Info file for configs. Info file for symlinks.
+    main(d, f, s)
