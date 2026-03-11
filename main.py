@@ -8,12 +8,6 @@ CONFIG_FOLDER = "Configs"
 INFO_FILE = "info.csv"
 SYMLINKS_FILE = "symlink.csv"
 
-def create_dir(path, need_to_print=True):
-    os.makedirs(path, exist_ok=True)
-    if need_to_print:
-        print(f"Successfully created {path}")
-
-
 def create_object(path, is_dir=False, need_to_print=True):
     if is_dir:
         os.makedirs(path, exist_ok=True)
@@ -65,28 +59,6 @@ def object_existence(path) -> bool:
             clear()
             return False
 
-    return False
-
-
-def config_dir_existence() -> bool:
-    if os.path.exists(f"./{CONFIG_FOLDER}"):
-        return True
-
-    ans = input(
-        f"Would you like to create ./{CONFIG_FOLDER}/ dir for config storage? (Y/n) "
-    )
-    if ans in " Yy":
-        try:
-            create_dir(CONFIG_FOLDER)
-            print()
-            pause()
-            clear()
-            return True
-        except Exception as e:
-            print(f"Something went wrong: {e}")
-            pause()
-            clear()
-            return False
     return False
 
 
