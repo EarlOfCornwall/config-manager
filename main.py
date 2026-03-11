@@ -135,9 +135,13 @@ def copying_confs(find_confs, config_dir=False, info_file=False):
         for source_path in conf_info[1:]:
 
             try:
-                copy_path = f"{prog_configs_folder}/{os.path.basename(source_path)}"
+
+                copy_path = os.path.join(prog_configs_folder, os.path.basename(source_path))
                 shutil.copy2(source_path, copy_path)
+                was_symlink = os.path.islink(source_path)
                 print(f"Copied '{source_path}'  into  '{copy_path}'")
+                if was_symlink:
+                    print(f'That was a symlink. Original file is on {os.readlink(source_path)}')
                 if info_file:
                     log_into_file(conf_info[0], source_path, copy_path)
                 else:
@@ -182,6 +186,8 @@ def turn_source_configs_to_symlink(config_dir=False, info_file=False):
         if ans and ans in "Yy":
             try:
                 if os.path.exists(source_path):
+                    backup_path = source_path + '.backup'
+                    shutil.copy2(source_path, backup_path)
                     os.remove(source_path)
                 os.symlink(os.path.abspath(copy_path), source_path)
                 print(
