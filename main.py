@@ -319,5 +319,6 @@ def main(config_dir_ex, info_file_ex, symlink_info_file_ex):
 
 
 if __name__ == "__main__":
+    clear()
     d, f, s = check_for_needed() # Dir for configs, Info file for configs. Info file for symlinks.
     main(d, f, s)
