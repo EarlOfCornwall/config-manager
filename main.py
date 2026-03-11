@@ -211,10 +211,10 @@ def turn_source_configs_to_symlink(config_dir=False, info_file=False, symlink_in
             except Exception as e:
                 print(f"Something went wrong: {e}")
 
-        pause(len())
-        clear()
-        print('Done.')
-        if symlink_info_file: print(f'Info about saved symlinks is in {SYMLINKS_FILE}')
+        pause(1)
+    clear()
+    print('Done.')
+    if symlink_info_file: print(f'Info about saved symlinks is in {SYMLINKS_FILE}')
 
 
 def return_from_config_dir(config_dir=False, info_file=False):
