@@ -122,7 +122,7 @@ def log_into_file(prog_name="Unknown", source_path="Unknown", copy_path="Unknown
         )  # PROG_NAME SOURCE_CONF COPY_CONF
 
 
-def show_finded_confs(finded_confs):
+def show_found_confs(finded_confs):
     print("Found:")
     for conf_info in finded_confs:
         print(f"{len(conf_info) - 1} config-files for {conf_info[0]}:")
@@ -163,7 +163,7 @@ def copying_confs(find_confs, config_dir=False, info_file=False):
                 print(f"Something went wrong {e}")
     print('Done copying configs.')
 
-def read_info_file() -> set:
+def read_info_file() -> list:
     info_dict = {} 
     with open(INFO_FILE, "r", encoding="UTF-8", newline="") as info_file:
         reader = csv.reader(info_file, quoting=csv.QUOTE_ALL)
@@ -183,9 +183,11 @@ def turn_source_configs_to_symlink(config_dir=False, info_file=False, symlink_in
 
     info = read_info_file()
     if len(info) != count_files_in_folder():
-        raise ValueError(
-            "Mismatch between the number of records and saved configs. Something went wrong."
-        )
+        print(f'WARNING: Mismatch between the number of records (in {INFO_FILE}) and saved configs')
+        print(f"{len(info)} - records, {count_files_in_folder()} - files.")
+        ans = input("Continue anyway? (N/y) ")
+        if ans not in 'Yy' and ans != '':
+            return
 
     for row in info:
         prog_name, source_path, copy_path = row
@@ -249,7 +251,7 @@ def return_from_config_dir(config_dir=False, info_file=False):
 def main(config_dir_ex, info_file_ex, symlink_info_file_ex):
 
     popular_confs = search_for_popular_configs()
-    show_finded_confs(popular_confs)
+    show_found_confs(popular_confs)
     print()
     pause()
 
