@@ -150,7 +150,7 @@ def copying_confs(find_confs, config_dir=False, info_file=False):
                     )
             except Exception as e:
                 print(f"Something went wrong {e}")
-
+    print('Done copying configs.')
 
 def read_info_file() -> set:
     info_set = set()
@@ -198,6 +198,7 @@ def turn_source_configs_to_symlink(config_dir=False, info_file=False):
 
         pause()
         clear()
+        print('Done.')
 
 
 def return_from_config_dir(config_dir=False, info_file=False):
@@ -232,16 +233,23 @@ def main(config_dir_ex, info_file_ex):
 
     ans = input("Do you want to copy finded configs? (Y/n) ")
     clear()
-    if ans in " Yy":
+    if ans in "Yy":
         copying_confs(popular_confs, config_dir=config_dir_ex, info_file=info_file_ex)
         pause(len(popular_confs))
         clear()
 
     print(f"Now you have {count_files_in_folder()} configs in {CONFIG_FOLDER}/")
-    ans = input("Do you want to return configs on their place? (N/y) ")
-    clear()
-    if ans and ans in "yY":
-        return_from_config_dir(config_dir_ex, info_file_ex)
+    
+    #ans = input(f"Do you want to replace source configs with symlinks linked to configs in {CONFIG_FOLDER} (Y/n) ")
+    #if ans in "yY":
+        #turn_source_configs_to_symlink(config_dir_ex, info_file_ex)
+        #pause(len(popular_confs))
+        
+
+#    ans = input("Do you want to return configs on their place? (N/y) ")
+#    clear()
+#    if ans and ans in "yY":
+#        return_from_config_dir(config_dir_ex, info_file_ex)
 
 
 if __name__ == "__main__":
