@@ -2,4 +2,4 @@ mngr_venv/
 __pycache__/
 Configs/
 info.csv
-
+symlink.csv

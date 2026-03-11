@@ -6,7 +6,7 @@ import time
 
 CONFIG_FOLDER = "Configs"
 INFO_FILE = "info.csv"
-
+SYMLINKS_FILE = "symlink.csv"
 
 def create_dir(path, need_to_print=True):
     os.makedirs(path, exist_ok=True)
@@ -102,6 +102,12 @@ def search_for_popular_configs():
 
     return find_confs
 
+def log_into_symlink_file(prog_name='Unknown', config_path='Unknown', symlink_path='Unknown'):
+    with open(SYMLINKS_FILE, "a", encoding="UTF-8", newline="") as symlink_file:
+        writer = csv.writer(symlink_file, quoting=csv.QUOTE_ALL)
+        writer.writerow(
+            [prog_name, config_path, symlink_path]
+        )
 
 def log_into_file(prog_name="Unknown", source_path="Unknown", copy_path="Unknown"):
     with open(INFO_FILE, "a", encoding="UTF-8", newline="") as info_file:
