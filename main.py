@@ -11,14 +11,14 @@ SYMLINKS_FILE = "symlink.csv"
 def create_dir(path, need_to_print=True):
     os.makedirs(path, exist_ok=True)
     if need_to_print:
-        print(f"Succefully created {path}")
+        print(f"Successfully created {path}")
 
 
 def create_file(path, need_to_print=True):
     with open(path, "w", encoding="UTF-8"):
         pass
     if need_to_print:
-        print(f"Succefully created {path}")
+        print(f"Successfully created {path}")
 
 
 def clear():
@@ -48,7 +48,7 @@ def info_file_existence(path) -> bool:
         return True
 
     ans = input(f"Would you like to create ./{path} file for info storage? (Y/n) ")
-    if ans in " Yy":
+    if ans in "Yy":
         try:
             create_file(path)
             print()
@@ -119,7 +119,7 @@ def log_into_file(prog_name="Unknown", source_path="Unknown", copy_path="Unknown
 
 
 def show_finded_confs(finded_confs):
-    print("Founded:")
+    print("Found:")
     for conf_info in finded_confs:
         print(f"{len(conf_info) - 1} config-files for {conf_info[0]}:")
         for confs in conf_info[1:]:
@@ -131,7 +131,7 @@ def show_finded_confs(finded_confs):
 def copying_confs(find_confs, config_dir=False, info_file=False):
     if not config_dir:
         raise FileNotFoundError(
-            f"Dir ./{CONFIG_FOLDER}/ not found. Programm can create it. Reopen programm."
+            f"Dir ./{CONFIG_FOLDER}/ not found. Program can create it. Reopen programm."
         )
 
     for conf_info in find_confs:
@@ -153,7 +153,7 @@ def copying_confs(find_confs, config_dir=False, info_file=False):
                     log_into_file(conf_info[0], source_path, copy_path)
                 else:
                     print(
-                        f"{INFO_FILE} does not exists. Programm cant log info about copied configs."
+                        f"{INFO_FILE} does not exists. Program cant log info about copied configs."
                     )
             except Exception as e:
                 print(f"Something went wrong {e}")
@@ -188,7 +188,7 @@ def turn_source_configs_to_symlink(config_dir=False, info_file=False, symlink_in
             f"Do you agree with turning {source_path} to symlink with path on {copy_path}?"
         )
         ans = input(
-            f"{source_path} will be deleted. If {copy_path} is corrupted you can loose your config. (N/y) "
+            f"{source_path} will be deleted. If {copy_path} is corrupted you can lose your config. (N/y) "
         )
         if ans and ans in "Yy":
             try:
@@ -201,7 +201,7 @@ def turn_source_configs_to_symlink(config_dir=False, info_file=False, symlink_in
                 os.symlink(os.path.abspath(copy_path), source_path)
                 
                 print(
-                    f"Succefully create {source_path}(symlink) -> {copy_path}(config)"
+                    f"Successfully create {source_path}(symlink) -> {copy_path}(config)"
                 )
                 if symlink_info_file:
                     config_path = copy_path
@@ -247,7 +247,7 @@ def main(config_dir_ex, info_file_ex, symlink_info_file_ex):
     print()
     pause()
 
-    ans = input("Do you want to copy finded configs? (Y/n) ")
+    ans = input("Do you want to copy found configs? (Y/n) ")
     clear()
     if ans in "Yy":
         copying_confs(popular_confs, config_dir=config_dir_ex, info_file=info_file_ex)
