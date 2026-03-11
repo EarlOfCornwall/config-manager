@@ -14,9 +14,12 @@ def create_dir(path, need_to_print=True):
         print(f"Successfully created {path}")
 
 
-def create_file(path, need_to_print=True):
-    with open(path, "w", encoding="UTF-8"):
-        pass
+def create_object(path, is_dir=False, need_to_print=True):
+    if is_dir:
+        os.makedirs(path, exist_ok=True)
+    else:
+        with open(path, "w", encoding="UTF-8"):
+            pass
     if need_to_print:
         print(f"Successfully created {path}")
 
@@ -30,9 +33,9 @@ def pause(pause=1.5):
 
 
 def check_for_needed() -> list:
-    dir = config_dir_existence()
-    info_file = info_file_existence(INFO_FILE)
-    symlink_info_file = info_file_existence(SYMLINKS_FILE)
+    dir = object_existence(CONFIG_FOLDER)
+    info_file = object_existence(INFO_FILE)
+    symlink_info_file = object_existence(SYMLINKS_FILE)
     return [dir, info_file, symlink_info_file]
 
 
@@ -43,14 +46,15 @@ def count_files_in_folder(root_folder=CONFIG_FOLDER):
     return total
 
 
-def info_file_existence(path) -> bool:
+def object_existence(path) -> bool:
     if os.path.exists(path):
         return True
 
     ans = input(f"Would you like to create ./{path} file for info storage? (Y/n) ")
     if ans in "Yy":
         try:
-            create_file(path)
+            is_dir = '.' not in os.path.basename(path)
+            create_object(path, is_dir=is_dir)
             print()
             pause()
             clear()
@@ -160,13 +164,15 @@ def copying_confs(find_confs, config_dir=False, info_file=False):
     print('Done copying configs.')
 
 def read_info_file() -> set:
-    info_set = set()
+    info_dict = {} 
     with open(INFO_FILE, "r", encoding="UTF-8", newline="") as info_file:
         reader = csv.reader(info_file, quoting=csv.QUOTE_ALL)
         for row in reader:
-            info_set.add(tuple(row))
+            if not row: 
+                continue
+            info_dict[tuple(row)] = row
 
-    return info_set  # No duplicates in paths
+    return list(info_dict.values())  # No duplicates in paths
 
 
 def turn_source_configs_to_symlink(config_dir=False, info_file=False, symlink_info_file=False):
