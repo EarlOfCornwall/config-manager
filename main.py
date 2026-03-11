@@ -141,7 +141,7 @@ def copying_confs(find_confs, config_dir=False, info_file=False):
     for conf_info in find_confs:
         prog_name = conf_info[0]
         prog_configs_folder = f"{CONFIG_FOLDER}/{prog_name}"
-        create_dir(prog_configs_folder, need_to_print=False)
+        create_object(prog_configs_folder, is_dir=True, need_to_print=False)
 
         for source_path in conf_info[1:]:
 
@@ -199,8 +199,8 @@ def turn_source_configs_to_symlink(config_dir=False, info_file=False, symlink_in
             f"{source_path} will be deleted. If {copy_path} is corrupted you can lose your config. (N/y) "
         )
         if ans and ans in "Yy":
+            backup_path = 'No backup'
             try:
-                backup_path = 'No backup'
                 if os.path.exists(source_path):
                     backup_path = source_path + '.backup'
                     shutil.copy2(source_path, backup_path)
@@ -218,8 +218,17 @@ def turn_source_configs_to_symlink(config_dir=False, info_file=False, symlink_in
 
             except Exception as e:
                 print(f"Something went wrong: {e}")
+                
+                if os.path.exists(backup_path):
+                    print("Restoring from backup")
+                    try:
+                        shutil.move(backup_path, source_path)
+                        print("Restored")
+                    except Exception:
+                        print(f"Restore failed. You can do it manually. {backup_path} - path for backup")
+                        pause(1)
 
-        pause(1)
+        pause()
     clear()
     print('Done.')
     if symlink_info_file: print(f'Info about saved symlinks is in {SYMLINKS_FILE}')
@@ -259,7 +268,7 @@ def main(config_dir_ex, info_file_ex, symlink_info_file_ex):
     clear()
     if ans in "Yy":
         copying_confs(popular_confs, config_dir=config_dir_ex, info_file=info_file_ex)
-        pause(len(popular_confs))
+        pause(3)
         clear()
 
     print(f"Now you have {count_files_in_folder()} configs in {CONFIG_FOLDER}/")
