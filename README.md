@@ -30,4 +30,10 @@ To add more programs, edit `paths_info.py`.
 2. **Symlink**: Replaces originals with symlinks to backups (with optional backup)
 3. **Restore**: Moves configs back to original locations
 
-
+## Project Structure
+```
+config-manager/
+├── main.py
+├── paths_info.py
+└── README.md
+```
