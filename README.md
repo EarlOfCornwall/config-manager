@@ -32,8 +32,10 @@ To add more programs, edit `paths_info.py`.
 
 ## Project Structure
 ```
-config-manager/
-├── main.py
-├── paths_info.py
-└── README.md
+co1nfig-manager/
+├── main.py                 # Main script logic
+├── paths_info.py           # Path info for configs
+├── Configs/                # Saved configs
+├── info.csv                # Log-file for saved configs
+└── symlink.csv             # Log-file for saved symlinks
 ```
