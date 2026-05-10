@@ -9,6 +9,7 @@ python main.py
 ```
 
 The script will:
+
 1. Ask to create `Configs/` folder for backups
 2. Ask to create `info.csv` and `symlink.csv` log files for tracking
 3. Show an script menu
@@ -16,11 +17,16 @@ The script will:
 ## Supported Programs
 
 Config files are searched for:
+
 - **bash** — `.bashrc`, `.bash_profile`, `.bash_aliases`
 - **zsh** — `.zshrc`, `.zprofile`, `.zshenv`
 - **git** — `.gitconfig`, `.gitignore_global`
 - **vim** — `.vimrc`, `.gvimrc`
 - **kitty** — `kitty.conf`
+- **vscode** — `settings.json`, `keybindings.json`, `snippets/`, `tasks.json`, `launch.json`
+- **cursor** — `settings.json`, `keybindings.json`, `cli-config.json`, `mcp.json`, `cli.json`
+- **opencode** — `opencode.json`, `tui.json`, `opencode.jsonc`
+- **lmstudio-mcp** — `mcp.json`
 
 To add more programs, edit `paths_info.py`.
 
@@ -31,6 +37,7 @@ To add more programs, edit `paths_info.py`.
 3. **Restore**: Moves configs back to original locations
 
 ## Project Structure
+
 ```
 co1nfig-manager/
 ├── main.py                 # Main script logic
